@@ -1,5 +1,6 @@
 from tkinter import *
 import math
+import winsound
 
 # CONSTANTS
 PINK = "#e2979c"
@@ -10,13 +11,16 @@ FONT_NAME = "Courier"
 WORK_MIN = 25
 SHORT_BREAK_MIN = 5
 LONG_BREAK_MIN = 20
+SOUND = "./Pomodoro/Cartoon.wav"
 reps = 0
 timer = None
+
 
 # TIMER RESET
 
 def reset_timer():
     global reps
+
     window.after_cancel(timer)
     canvas.itemconfig(timer_text, text="00:00")
     title_label.config(text="Timer", fg=GREEN)
@@ -49,11 +53,13 @@ def start_timer():
 
 def count_down(count):
     canvas.itemconfig(timer_text, text=f"{count // 60:02d}:{count % 60:02d}")
-    
+
     if count > 0:
         global timer
         timer = window.after(1000, count_down, count - 1)
     else:
+        bring_window_to_front()
+        play_alert_sound()
         start_timer()
         marks = ""
         work_sessions = math.floor(reps / 2)
@@ -62,19 +68,41 @@ def count_down(count):
         check_mark.config(text=marks)
 
 
+# ALERTS AT THE END OF EACH SESSION
+
+def play_alert_sound():
+    try:
+        winsound.PlaySound(SOUND, winsound.SND_FILENAME)
+    except (RuntimeError, FileNotFoundError):
+        window.bell()
+
+
+def bring_window_to_front():
+    try:
+        window.withdraw()
+        window.deiconify()
+        window.lift()
+        window.attributes("-topmost", True)
+        window.after(100, lambda: window.attributes("-topmost", False))
+    except TclError:
+        pass
+
+
 # UI SETUP
 
 window = Tk()
 window.title("Pomodoro")
 window.config(padx=100, pady=50, bg=YELLOW)
 
-title_label = Label(text="Timer", fg=GREEN, bg=YELLOW, font=(FONT_NAME, 50, "bold"))
+title_label = Label(text="Timer", fg=GREEN, bg=YELLOW,
+                    font=(FONT_NAME, 50, "bold"))
 title_label.grid(row=0, column=1)
 
 canvas = Canvas(width=200, height=224, bg=YELLOW, highlightthickness=0)
 tomato_img = PhotoImage(file="./Pomodoro/tomato.png")
 canvas.create_image(100, 112, image=tomato_img)
-timer_text = canvas.create_text(100, 130, text="00:00", fill="white", font=(FONT_NAME, 35, "bold"))
+timer_text = canvas.create_text(
+    100, 130, text="00:00", fill="white", font=(FONT_NAME, 35, "bold"))
 canvas.grid(row=1, column=1)
 
 start_button = Button(text="Start", highlightthickness=0, command=start_timer)
