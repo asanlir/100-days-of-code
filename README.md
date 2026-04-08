@@ -58,7 +58,7 @@ Para mantener un historial consistente, los mensajes de commit de este repositor
 2. Usar el formato `Proyecto: verbo + cambio principal`.
 3. Empezar la descripción con un verbo claro y profesional, por ejemplo: agrega, corrige, refactoriza, documenta, configura o reorganiza.
 4. Hacer que cada commit represente un único cambio lógico y fácilmente identificable.
-5. Evitar mensajes genéricos como "cambios", "update" o "varias correcciones"; el mensaje debe describir el resultado real del cambio.
+5. Evitar mensajes genéricos como "cambios", "update" o "varias correcciones"; el mensaje debe describir el resultado real del cambio y ser descriptivo.
 
 Ejemplos:
 
