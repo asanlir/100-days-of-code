@@ -54,6 +54,11 @@ Desktop.ini
 *.tmp
 *.swp
 
+# Environment variables
+.env
+.env.*
+!.env.example
+
 # Supporting course PDFs
 Recursos/*.pdf
 OOP Coffee Machine/*.pdf
