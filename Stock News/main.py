@@ -7,10 +7,10 @@ COMPANY_NAME = "Tesla Inc"
 STOCK_ENDPOINT = "https://www.alphavantage.co/query"
 NEWS_ENDPOINT = "https://newsapi.org/v2/everything"
 
-STOCK_API_KEY = "EZ3OJXEB6IK1SLD1"
-NEWS_API_KEY = "27bc3351c654402186d9bd3f864c9548"
-TWILIO_SID = "ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-TWILIO_AUTH_TOKEN = "your_auth_token"
+STOCK_API_KEY = "your_alpha_vantage_api_key"
+NEWS_API_KEY = "your_news_api_key"
+TWILIO_SID = "your_twilio_sid"
+TWILIO_AUTH_TOKEN = "your_twilio_auth_token"
 
 
 # Get yesterday's closing stock price.
@@ -26,13 +26,11 @@ stock_data = response.json()["Time Series (Daily)"]
 data_list = [value for (key, value) in stock_data.items()]
 yesterday_data = data_list[0]
 yesterday_closing_price = yesterday_data["4. close"]
-#print(yesterday_closing_price)
 
 
 # Get the day before yesterday's closing stock price
 day_before_yesterday_data = data_list[1]
 day_before_yesterday_closing_price = day_before_yesterday_data["4. close"]
-#print(day_before_yesterday_closing_price)
 
 
 # Find the positive difference between 1 and 2.
@@ -46,7 +44,6 @@ else:
 
 # Work out the percentage difference in price between closing price yesterday and closing price the day before yesterday.
 percentage_diff = round((difference / float(day_before_yesterday_closing_price)) * 100)
-#print(percentage_diff)
 
 
 # Use the News API to get articles related to the COMPANY_NAME.
@@ -61,12 +58,8 @@ if abs(percentage_diff) > 5:
     articles = news_response.json()["articles"]
 
 
-# Create a list that contains the first 3 articles
+# Create a list that contains the first 3 articles properly formatted.
 three_articles = articles[:3]
-#print(three_articles)
-
-
-# Create a new list of the first 3 article's headline and description using list comprehension.
 formatted_articles = [f"{STOCK_NAME}: {up_down}{percentage_diff}%\nHeadline: {article['title']}. \nBrief: {article['description']}" for article in three_articles]
 
 
