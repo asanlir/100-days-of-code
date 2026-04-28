@@ -47,6 +47,22 @@ for exercise in result["exercises"]:
         }
     }
 
+    #No Authentication  
     sheet_response = requests.post(sheet_endpoint, json=sheet_inputs)
 
-    print(sheet_response.text)
+    #Basic Authentication
+    sheet_response = requests.post(
+    sheet_endpoint, 
+    json=sheet_inputs, 
+    auth=("your username", "your password")
+    )
+
+    #Bearer Token Authentication
+    bearer_headers = {
+    "Authorization": f"Bearer {"your token"}"
+    }
+    sheet_response = requests.post(
+        sheet_endpoint,
+        json=sheet_inputs,
+        headers=bearer_headers
+    )
