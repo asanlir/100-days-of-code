@@ -1,22 +1,25 @@
 import requests
 from datetime import datetime
+import os
 
 
+# Your personal data. Used by the Exercise & Nutrition API to calculate calories.
 GENDER = "YOUR_GENDER"
 WEIGHT_KG = "YOUR_WEIGHT"
 HEIGHT_CM = "YOUR_HEIGHT"
 AGE = "YOUR_AGE"
 
-APP_ID = "YOUR_APP_ID"
-API_KEY = "YOUR_API_KEY"
+# Nutrition APP ID and API Key. Actual values are stored as environment variables.
+APP_ID = os.environ["NT_APP_ID"]
+API_KEY = os.environ["NT_API_KEY"]
 
 
 exercise_endpoint = "https://app.100daysofpython.dev/v1/nutrition/natural/exercise"
-sheet_endpoint = "YOUR_SHEETY_ENDPOINT"
-
+sheet_endpoint = os.environ["SHEET_ENDPOINT"]
 
 exercise_text = input("Tell me which exercises you did: ")
 
+# Nutritionix API Call
 headers = {
     "x-app-id": APP_ID,
     "x-app-key": API_KEY,
@@ -33,9 +36,16 @@ parameters = {
 response = requests.post(exercise_endpoint, json=parameters, headers=headers)
 result = response.json()
 
+# Adding date and time
 today_date = datetime.now().strftime("%d/%m/%Y")
 now_time = datetime.now().strftime("%X")
 
+# Sheety Project API. Check your Google sheet name and Sheety endpoint
+GOOGLE_SHEET_NAME = "workout"
+sheet_endpoint = os.environ[
+    "ENV_SHEETY_ENDPOINT"]
+
+# Sheety API Call & Authentication
 for exercise in result["exercises"]:
     sheet_inputs = {
         "workout": {
@@ -47,22 +57,30 @@ for exercise in result["exercises"]:
         }
     }
 
-    #No Authentication  
+    # Sheety Authentication Option 1: No Auth
+    """
     sheet_response = requests.post(sheet_endpoint, json=sheet_inputs)
+    """
 
-    #Basic Authentication
+    # Sheety Authentication Option 2: Basic Auth
     sheet_response = requests.post(
-    sheet_endpoint, 
-    json=sheet_inputs, 
-    auth=("your username", "your password")
+        sheet_endpoint,
+        json=sheet_inputs,
+        auth=(
+            os.environ["ENV_SHEETY_USERNAME"],
+            os.environ["ENV_SHEETY_PASSWORD"],
+        )
     )
 
-    #Bearer Token Authentication
+    # Sheety Authentication Option 3: Bearer Token
+    """
     bearer_headers = {
-    "Authorization": f"Bearer {"your token"}"
+        "Authorization": f"Bearer {os.environ['ENV_SHEETY_TOKEN']}"
     }
     sheet_response = requests.post(
         sheet_endpoint,
         json=sheet_inputs,
         headers=bearer_headers
-    )
+    )    
+    """
+    print(f"Sheety Response: \n {sheet_response.text}")
