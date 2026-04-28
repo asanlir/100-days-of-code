@@ -49,6 +49,9 @@ dmypy.json
 Thumbs.db
 Desktop.ini
 
+# Notas personales
+pendiente.txt
+
 # Local logs and temp files
 *.log
 *.tmp
