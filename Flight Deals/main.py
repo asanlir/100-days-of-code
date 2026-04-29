@@ -16,7 +16,6 @@ requests_cache.install_cache(
     }
 )
 
-
 # Setup the data manager, flight search and notification manager instances
 data_manager = DataManager()
 sheet_data = data_manager.get_destination_data()
@@ -25,12 +24,15 @@ flight_search = FlightSearch()
 # Create an instance of the NotificationManager
 notification_manager = NotificationManager()
 
+# Retrieve your customer emails
+customer_data = data_manager.get_customer_emails()
+customer_email_list = [row["whatIsYourEmail?"] for row in customer_data]
+# print(f"Your email list includes {customer_email_list}")
 
 # Set the Dates and Origin Airport
 tomorrow = datetime.now() + timedelta(days=1)
 six_month_from_today = datetime.now() + timedelta(days=(6 * 30))
 ORIGIN_CITY_IATA = "LHR"  # London Heathrow
-
 
 # Find Cheap direct Flights
 for destination in sheet_data:
